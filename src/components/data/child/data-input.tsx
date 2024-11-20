@@ -117,6 +117,7 @@ export type DataInputProps = {
 
 export interface ButtonInputProps {
   value?: string
+  loading?: boolean
   defaultValue?: string
   onChange?: (value: string) => void
   onSearch?: (value: string) => void

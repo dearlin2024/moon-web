@@ -21,6 +21,7 @@ export const EditModal: React.FC<EditModalProps> = (props) => {
   const { onCancel, onOk, open, datasourceId } = props
   const [form] = Form.useForm<CreateDatasourceRequest>()
   const [loading, setLoading] = React.useState(false)
+  const [dataSourceLoading, setDataSourceLoading] = React.useState(false)
   const [dataSourceHealthStatus, setDataSourceHealth] = useState(false)
   const handleOnOk = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     form.validateFields().then((values) => {
@@ -164,11 +165,17 @@ export const EditModal: React.FC<EditModalProps> = (props) => {
       props: {
         placeholder: '请输入数据源地址',
         enterButton: '连接测试',
+        loading: dataSourceLoading,
         onSearch: async (value: string) => {
           setDataSourceHealth(false)
-          datasourceHealth({ url: value, type: form.getFieldValue('storageType') }).then(() => {
-            setDataSourceHealth(true)
-          })
+          setDataSourceLoading(true)
+          datasourceHealth({ url: value, type: form.getFieldValue('storageType') })
+            .then(() => {
+              setDataSourceHealth(true)
+            })
+            .finally(() => {
+              setDataSourceLoading(false)
+            })
         },
         suffix: dataSourceHealthStatus ? (
           <CheckCircleTwoTone twoToneColor='#52c41a' />
